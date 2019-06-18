@@ -37,6 +37,7 @@ public class CommitEachFile {
         String[] fileStatusArr = fileStatusStr.split("\n");
 
         for (String fileStatus : fileStatusArr) {
+            System.out.println("\n\n");
             CommandLineUtils.run("git add " + getFilePath(fileStatus));
             CommandLineUtils.run("git commit -m " + getFileName(fileStatus));
         }
