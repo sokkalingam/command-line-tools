@@ -24,7 +24,7 @@ public class CommitEachFile {
 
         for (String filePath : filePathsArr) {
             CommandLineUtils.run("git add " + filePath);
-            CommandLineUtils.run("git commit -m '" + getFileName(filePath) + "'");
+            CommandLineUtils.run("git commit -m " + getFileName(filePath));
         }
     }
 }
