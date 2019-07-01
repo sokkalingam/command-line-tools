@@ -17,6 +17,7 @@ public class AutoTagMasterCommit {
         List<String> validTags = getValidTags(allTagsArr);
         sort(validTags);
         String nextTag = getNextTag(validTags.get(0));
+        System.out.println("Next tag: " + nextTag);
         CommandLineUtils.run("git tag -a -m " + nextTag + " " + nextTag);
         CommandLineUtils.run("git push --follow-tags origin master");
     }
