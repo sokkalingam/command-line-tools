@@ -7,8 +7,9 @@ import java.io.InputStreamReader;
 public class CommandLineUtils {
 
     public static String run(String command) {
+        System.out.println("Running Command: " + command);
         try {
-            Process proc = Runtime.getRuntime().exec(command); //Whatever you want to execute
+            Process proc = Runtime.getRuntime().exec(command);
             BufferedReader read = new BufferedReader(new InputStreamReader(
                     proc.getInputStream()));
             try {
