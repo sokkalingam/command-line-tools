@@ -1,5 +1,7 @@
 package git;
 
+import git.utils.CommitUtils;
+import org.apache.commons.lang3.StringUtils;
 import utils.CommandLineUtils;
 
 public class CommitEachFile {
@@ -9,37 +11,18 @@ public class CommitEachFile {
         commitEachFile();
     }
 
-    public static String getFilePath(String fileStatus) {
-        if (fileStatus == null)
-            return "";
-
-        String[] arr = fileStatus.split(" ");
-        String filePath = arr[arr.length - 1];
-        System.out.println("Filepath: " + filePath);
-        return filePath;
-    }
-
-    public static String getFileName(String filePath) {
-        if (filePath == null)
-            return "";
-
-        filePath = getFilePath(filePath);
-
-        String[] splitArr = filePath.split("/");
-        String fileName = splitArr[splitArr.length - 1];
-        fileName = fileName.split("\\.")[0];
-        System.out.println("FileName: " + fileName);
-        return fileName;
-    }
-
     public static void commitEachFile() {
         String fileStatusStr = CommandLineUtils.run("git status -s");
+
+        if (StringUtils.isBlank(fileStatusStr))
+            return;
+
         String[] fileStatusArr = fileStatusStr.split("\n");
 
         for (String fileStatus : fileStatusArr) {
             System.out.println("");
-            CommandLineUtils.run("git add " + getFilePath(fileStatus));
-            CommandLineUtils.run("git commit -m " + getFileName(fileStatus));
+            CommandLineUtils.run("git add " + CommitUtils.getFilePath(fileStatus));
+            CommandLineUtils.run("git commit -m " + CommitUtils.getFileName(fileStatus));
             System.out.println("");
         }
     }
