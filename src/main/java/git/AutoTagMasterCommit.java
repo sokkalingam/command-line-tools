@@ -1,5 +1,6 @@
 package git;
 
+import git.enums.VersionLevel;
 import utils.CommandLineUtils;
 
 import java.util.ArrayList;
@@ -7,8 +8,31 @@ import java.util.List;
 
 public class AutoTagMasterCommit {
 
+    private static VersionLevel versionLevel = null;
+
     public static void main(String[] args) {
-        autoTag();
+        if (validate(args)) {
+            if (versionLevel == null) versionLevel = VersionLevel.PATCH;
+            autoTag();
+            System.out.println("Valid args");
+        } else {
+            System.out.println("Invalid arguments. Valid arguments are one of [MAJOR, MINOR, PATCH]");
+        }
+    }
+
+    public static boolean validate(String[] args) {
+        if (args == null || args.length == 0)
+            return true;
+        if (args.length > 1)
+            return false;
+        // Args length has to be 1
+        String arg = args[0];
+        try {
+            versionLevel = VersionLevel.valueOf(arg.toUpperCase());
+        } catch(Exception ex) {
+            return false;
+        }
+        return true;
     }
 
     public static void autoTag() {
@@ -16,7 +40,7 @@ public class AutoTagMasterCommit {
         String[] allTagsArr = allTagsAsString.split("\n");
         List<String> validTags = getValidTags(allTagsArr);
         sort(validTags);
-        String nextTag = getNextTag(validTags.get(0));
+        String nextTag = getNextTag(validTags.get(0), versionLevel);
         System.out.println("Next tag: " + nextTag);
         CommandLineUtils.run("git tag -a -m " + nextTag + " " + nextTag);
         CommandLineUtils.run("git push --follow-tags origin master");
@@ -61,21 +85,23 @@ public class AutoTagMasterCommit {
         });
     }
 
-    public static String getNextTag(String lastTag) {
+    public static String getNextTag(String lastTag, VersionLevel versionLevel) {
         String[] arr = lastTag.split("\\.");
 
         StringBuilder sb = new StringBuilder();
 
-        int val = Integer.valueOf(arr[arr.length - 1]) + 1;
-        sb.append(val);
-
-        for (int i = arr.length - 2; i >= 0; i--) {
-            sb.insert(0, ".").insert(0, arr[i]);
+        if (versionLevel == VersionLevel.PATCH) {
+            int val = Integer.valueOf(arr[2]) + 1;
+            sb.append(arr[0]).append(".").append(arr[1]).append(".").append(val);
+        } else if (versionLevel == VersionLevel.MINOR) {
+            int val = Integer.valueOf(arr[1]) + 1;
+            sb.append(arr[0]).append(".").append(val).append(".").append(0);
+        } else if (versionLevel == VersionLevel.MAJOR) {
+            int val = Integer.valueOf(arr[0]) + 1;
+            sb.append(val).append(".").append(0).append(".").append(0);
         }
 
         return sb.toString();
     }
-
-
 
 }
