@@ -12,7 +12,7 @@ public class CommitEachFile {
     }
 
     public static void commitEachFile() {
-        String fileStatusStr = CommandLineUtils.run("git status -s");
+        String fileStatusStr = CommandLineUtils.run("git diff --name-only");
 
         if (StringUtils.isBlank(fileStatusStr))
             return;

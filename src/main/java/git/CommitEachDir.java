@@ -4,6 +4,7 @@ import git.utils.CommitUtils;
 import org.apache.commons.lang3.StringUtils;
 import utils.CommandLineUtils;
 
+import javax.activation.CommandMap;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -11,11 +12,12 @@ public class CommitEachDir {
 
     public static void main(String[] args) {
         System.out.println("CommandLineTools::Git::CommitEachDir");
+        CommandLineUtils.run("cd ~/dozi-partnerapiapp");
         commitEachDir();
     }
 
     public static void commitEachDir() {
-        String fileStatusStr = CommandLineUtils.run("git status -s");
+        String fileStatusStr = CommandLineUtils.run("git diff --name-only");
         while (StringUtils.isNotBlank(fileStatusStr)) {
             String[] files = fileStatusStr.split("\n");
 

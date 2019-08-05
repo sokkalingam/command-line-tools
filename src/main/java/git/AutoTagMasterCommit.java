@@ -15,7 +15,7 @@ public class AutoTagMasterCommit {
             if (versionLevel == null) versionLevel = VersionLevel.PATCH;
             autoTag();
         } else {
-            System.out.println("Invalid arguments. Valid arguments are one of [MAJOR, MINOR, PATCH]");
+            throw new RuntimeException("Invalid arguments. Valid arguments are one of [MAJOR, MINOR, PATCH] - defaults to PATCH");
         }
     }
 
