@@ -12,7 +12,6 @@ public class CommitEachDir {
 
     public static void main(String[] args) {
         System.out.println("CommandLineTools::Git::CommitEachDir");
-        CommandLineUtils.run("cd ~/dozi-partnerapiapp");
         commitEachDir();
     }
 
