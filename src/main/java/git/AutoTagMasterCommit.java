@@ -35,14 +35,14 @@ public class AutoTagMasterCommit {
     }
 
     public static void autoTag() {
-        String allTagsAsString = CommandLineUtils.run("git tag -l");
+        String allTagsAsString = CommandLineUtils.runAsString("git tag -l");
         String[] allTagsArr = allTagsAsString.split("\n");
         List<String> validTags = getValidTags(allTagsArr);
         sort(validTags);
         String nextTag = getNextTag(validTags.get(0), versionLevel);
         System.out.println("Next tag: " + nextTag);
-        CommandLineUtils.run("git tag -a -m " + nextTag + " " + nextTag);
-        CommandLineUtils.run("git push --follow-tags origin master");
+        CommandLineUtils.runAsString("git tag -a -m " + nextTag + " " + nextTag);
+        CommandLineUtils.runAsString("git push --follow-tags origin master");
     }
 
     /**
@@ -71,8 +71,8 @@ public class AutoTagMasterCommit {
             String[] arr2 = item2.split("\\.");
 
             for (int i = 0; i < Math.min(arr1.length, arr2.length); i++) {
-                int one = Integer.valueOf(arr1[i]);
-                int two = Integer.valueOf(arr2[i]);
+                int one = parseInt(arr1[i]);
+                int two = parseInt(arr2[i]);
 
                 if (one == two)
                     continue;
@@ -83,6 +83,14 @@ public class AutoTagMasterCommit {
             return 0;
         });
     }
+    
+    public static int parseInt(String str) {
+        try {
+            return Integer.valueOf(str);
+        } catch (Exception ex) {
+            return 0;
+        }
+    }
 
     public static String getNextTag(String lastTag, VersionLevel versionLevel) {
         String[] arr = lastTag.split("\\.");
@@ -90,13 +98,13 @@ public class AutoTagMasterCommit {
         StringBuilder sb = new StringBuilder();
 
         if (versionLevel == VersionLevel.PATCH) {
-            int val = Integer.valueOf(arr[2]) + 1;
+            int val = parseInt(arr[2]) + 1;
             sb.append(arr[0]).append(".").append(arr[1]).append(".").append(val);
         } else if (versionLevel == VersionLevel.MINOR) {
-            int val = Integer.valueOf(arr[1]) + 1;
+            int val = parseInt(arr[1]) + 1;
             sb.append(arr[0]).append(".").append(val).append(".").append(0);
         } else if (versionLevel == VersionLevel.MAJOR) {
-            int val = Integer.valueOf(arr[0]) + 1;
+            int val = parseInt(arr[0]) + 1;
             sb.append(val).append(".").append(0).append(".").append(0);
         }
 
