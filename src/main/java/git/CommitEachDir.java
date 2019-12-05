@@ -4,7 +4,6 @@ import git.utils.CommitUtils;
 import org.apache.commons.lang3.StringUtils;
 import utils.CommandLineUtils;
 
-import javax.activation.CommandMap;
 import java.util.Arrays;
 import java.util.Comparator;
 
@@ -16,7 +15,7 @@ public class CommitEachDir {
     }
 
     public static void commitEachDir() {
-        String fileStatusStr = CommandLineUtils.run("git diff --name-only");
+        String fileStatusStr = CommandLineUtils.runAsString("git status -s");
         while (StringUtils.isNotBlank(fileStatusStr)) {
             String[] files = fileStatusStr.split("\n");
 
@@ -28,11 +27,11 @@ public class CommitEachDir {
             System.out.println("");
             String filePathDir = CommitUtils.getFilePathDir(file);
             String fileToAdd = StringUtils.isNotBlank(filePathDir) ? filePathDir : file;
-            CommandLineUtils.run("git add " + fileToAdd);
-            CommandLineUtils.run("git commit -m " + fileToAdd);
+            CommandLineUtils.runAsString("git add " + fileToAdd);
+            CommandLineUtils.runAsString("git commit -m " + fileToAdd);
             System.out.println("");
 
-            fileStatusStr = CommandLineUtils.run("git status -s");
+            fileStatusStr = CommandLineUtils.runAsString("git status -s");
         }
     }
 
