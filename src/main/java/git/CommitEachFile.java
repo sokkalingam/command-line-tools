@@ -12,7 +12,7 @@ public class CommitEachFile {
     }
 
     public static void commitEachFile() {
-        String fileStatusStr = CommandLineUtils.run("git diff --name-only");
+        String fileStatusStr = CommandLineUtils.runAsString("git status -s");
 
         if (StringUtils.isBlank(fileStatusStr))
             return;
@@ -21,8 +21,8 @@ public class CommitEachFile {
 
         for (String fileStatus : fileStatusArr) {
             System.out.println("");
-            CommandLineUtils.run("git add " + CommitUtils.getFilePath(fileStatus));
-            CommandLineUtils.run("git commit -m " + CommitUtils.getFileName(fileStatus));
+            CommandLineUtils.runAsString("git add " + CommitUtils.getFilePath(fileStatus));
+            CommandLineUtils.runAsString("git commit -m " + CommitUtils.getFileName(fileStatus));
             System.out.println("");
         }
     }
